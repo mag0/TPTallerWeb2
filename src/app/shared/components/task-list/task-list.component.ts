@@ -13,8 +13,7 @@ import { TaskService, Task } from '../../../core/task.service';
 export class TaskListComponent {
   newTaskTitle = '';
   newTaskDescription = '';
-  mensajeErrorTitulo = '';
-  mensajeErrorDescripcion = '';
+  taskBeingEdited: Task | null = null;
 
   constructor(public taskService: TaskService) {}
 
@@ -34,5 +33,21 @@ export class TaskListComponent {
     task.completed = !task.completed;
     this.taskService.updateTask(task);
   }
+
+  editTask(task: Task) {
+    this.taskBeingEdited = { ...task }; // Crear una copia del objeto tarea
+  }
+
+  updateTask() {
+    if (this.taskBeingEdited) {
+      this.taskService.updateTask(this.taskBeingEdited);
+      this.taskBeingEdited = null;
+    }
+  }
+
+  cancelEdit() {
+    this.taskBeingEdited = null;
+  }
 }
+
 
