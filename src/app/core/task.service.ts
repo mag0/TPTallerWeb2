@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export interface Task {
-  id: number;
+  id?: number;
   title: string;
   description: string;
   completed: boolean;
@@ -11,29 +13,23 @@ export interface Task {
   providedIn: 'root'
 })
 export class TaskService {
-  private tasks: Task[] = [
-    { id: 1, title: 'Comprar comida', description: 'Comprar frutas y verduras', completed: false },
-    { id: 2, title: 'Estudiar Angular', description: 'Revisar los nuevos cambios en Angular v18', completed: false },
-    { id: 3, title: 'Hacer ejercicio', description: 'Ir al gimnasio y hacer una hora de cardio', completed: false }
-  ];
-  private idCounter = 4; // Continuar el contador desde el siguiente ID disponible
+  private apiUrl = 'http://localhost:3000/tasks';
 
-  getTasks() {
-    return this.tasks;
+  constructor(private http: HttpClient) {}
+
+  getTasks(): Observable<Task[]> {
+    return this.http.get<Task[]>(this.apiUrl);
   }
 
-  addTask(title: string, description: string) {
-    this.tasks.push({ id: this.idCounter++, title, description, completed: false });
+  createTask(task: Task): Observable<Task> {
+    return this.http.post<Task>(this.apiUrl, task);
   }
 
-  deleteTask(id: number) {
-    this.tasks = this.tasks.filter(task => task.id !== id);
+  updateTask(id: number, task: Partial<Task>): Observable<Task> {
+    return this.http.put<Task>(`${this.apiUrl}/${id}`, task);
   }
 
-  updateTask(task: Task) {
-    const index = this.tasks.findIndex(t => t.id === task.id);
-    if (index !== -1) {
-      this.tasks[index] = task;
-    }
+  deleteTask(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

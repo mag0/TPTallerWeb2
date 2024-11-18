@@ -1,63 +1,29 @@
-<div class="container mx-auto p-4 dark:bg-gray-900 dark:text-gray-100">
-    <div class="flex justify-between items-center mb-4">
-        <h1 class="text-3xl font-bold">Task Manager</h1>
-    </div>
-    <div class="mb-4">
-        <input [(ngModel)]="newTaskTitle" placeholder="New task title"
-            class="block w-full px-3 py-2 bg-white dark:bg-gray-700 dark:border-gray-600 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-2" />
-        <textarea [(ngModel)]="newTaskDescription" placeholder="Task description"
-            class="block w-full px-3 py-2 bg-white dark:bg-gray-700 dark:border-gray-600 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-2"></textarea>
-        <div class="flex justify-end">
-            <button (click)="addTask()" type="button"
-                class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
-                Add
-            </button>
+<div class="task-list-container">
+    <h2>My Tasks</h2>
+  
+    <ul class="task-list">
+      <li *ngFor="let task of tasks" [class.completed]="task.completed">
+        <div class="task-details" *ngIf="!taskBeingEdited || taskBeingEdited.id !== task.id">
+          <span (click)="toggleCompletion(task)">{{ task.title }}</span>
+          <p *ngIf="task.description">{{ task.description }}</p>
+          <button class="edit-button" (click)="editTask(task)">Edit</button>
+          
         </div>
-    </div>
-
-    <ul class="divide-y divide-gray-200 dark:divide-gray-700">
-        <li *ngFor="let task of taskService.getTasks()"
-            class="p-4 flex justify-between items-center dark:bg-gray-800 dark:border-gray-700">
-            <div>
-                <h3 class="text-lg font-medium" [class.line-through]="task.completed">{{ task.title }}</h3>
-                <p class="text-sm" [class.line-through]="task.completed">{{ task.description }}</p>
-            </div>
-            <div>
-                <button (click)="toggleCompletion(task)"
-                    [ngClass]="task.completed ? 'bg-green-500 hover:bg-green-600 focus:ring-green-300 dark:bg-green-700 dark:hover:bg-green-800 dark:focus:ring-green-900' : 'bg-yellow-500 hover:bg-yellow-600 focus:ring-yellow-300 dark:bg-yellow-700 dark:hover:bg-yellow-800 dark:focus:ring-yellow-900'"
-                    class="focus:outline-none text-white font-medium rounded-lg text-sm px-5 py-2.5 mb-2 me-2">
-                    {{ task.completed ? 'Incomplete' : 'Complete' }}
-                </button>
-                <button (click)="editTask(task)" type="button"
-                    class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 
-            focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">
-                    Edit
-                </button>
-                <button (click)="deleteTask(task.id)" type="button"
-                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 
-            focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
-                    Delete
-                </button>
-            </div>
-        </li>
+  
+        <div class="task-edit-form" *ngIf="taskBeingEdited && taskBeingEdited.id === task.id">
+          <input type="text" [(ngModel)]="taskBeingEdited.title" placeholder="Title">
+          <textarea [(ngModel)]="taskBeingEdited.description" placeholder="Description" rows="3"></textarea>
+          <button class="save-button" (click)="updateTask()">Save</button>
+          <button class="cancel-button" (click)="cancelEdit()">Cancel</button>
+          
+        
+        </div>
+      </li>
     </ul>
-
-    <!-- Formulario de edición -->
-    <div *ngIf="taskBeingEdited" class="mb-4 mt-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
-        <h3 class="text-lg font-bold mb-2">Edit Task</h3>
-        <input [(ngModel)]="taskBeingEdited.title" placeholder="Edit task title" required
-            class="block w-full px-3 py-2 bg-white dark:bg-gray-700 dark:border-gray-600 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-2" />
-        <textarea [(ngModel)]="taskBeingEdited.description" placeholder="Edit task description" required
-            class="block w-full px-3 py-2 bg-white dark:bg-gray-700 dark:border-gray-600 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-2"></textarea>
-        <div class="flex justify-end">
-            <button (click)="updateTask()" type="button"
-                class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900">
-                Update
-            </button>
-            <button (click)="cancelEdit()" type="button"
-                class="focus:outline-none text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 me-2 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-900">
-                Cancel
-            </button>
-        </div>
-    </div>
-</div>
+  
+    <form class="new-task-form" (ngSubmit)="addTask()">
+      <input type="text" [(ngModel)]="newTaskTitle" placeholder="New Task Title" required>
+      <textarea [(ngModel)]="newTaskDescription" placeholder="Task Description" rows="3"></textarea>
+      <button type="submit" [disabled]="!newTaskTitle.trim() || !newTaskDescription.trim()">Add Task</button>
+    </form>
+  </div>
