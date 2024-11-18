@@ -1,29 +1,63 @@
-<div class="task-list-container">
-    <h2>My Tasks</h2>
-  
-    <ul class="task-list">
-      <li *ngFor="let task of tasks" [class.completed]="task.completed">
-        <div class="task-details" *ngIf="!taskBeingEdited || taskBeingEdited.id !== task.id">
-          <span (click)="toggleCompletion(task)">{{ task.title }}</span>
-          <p *ngIf="task.description">{{ task.description }}</p>
-          <button class="edit-button" (click)="editTask(task)">Edit</button>
-          
+<div class="container mx-auto p-4 dark:bg-gray-900 dark:text-gray-100">
+  <h2 class="text-3xl font-bold mb-4">My Tasks</h2>
+
+  <form class="new-task-form mb-4" (ngSubmit)="addTask()">
+    <input type="text" name="newTaskTitle" [(ngModel)]="newTaskTitle" placeholder="New Task Title" required
+      class="block w-full px-3 py-2 bg-white dark:bg-gray-700 dark:border-gray-600 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-2" />
+    <textarea name="newTaskDescription" [(ngModel)]="newTaskDescription" placeholder="Task Description" rows="3"
+      required
+      class="block w-full px-3 py-2 bg-white dark:bg-gray-700 dark:border-gray-600 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-2"></textarea>
+    <button type="submit" [disabled]="!newTaskTitle.trim() || !newTaskDescription.trim()"
+      class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
+      Add Task
+    </button>
+  </form>
+
+  <ul class="task-list divide-y divide-gray-200 dark:divide-gray-700">
+    <li *ngFor="let task of tasks" [class.completed]="task.completed"
+      class="p-4 flex justify-between items-center dark:bg-gray-800 dark:border-gray-700">
+      <div class="task-details flex justify-between items-center w-full"
+        *ngIf="!taskBeingEdited || taskBeingEdited.id !== task.id">
+        <div>
+          <span (click)="toggleCompletion(task)" class="cursor-pointer">{{ task.title }}</span>
+          <p *ngIf="task.description" class="text-gray-300">{{ task.description }}</p>
         </div>
-  
-        <div class="task-edit-form" *ngIf="taskBeingEdited && taskBeingEdited.id === task.id">
-          <input type="text" [(ngModel)]="taskBeingEdited.title" placeholder="Title">
-          <textarea [(ngModel)]="taskBeingEdited.description" placeholder="Description" rows="3"></textarea>
-          <button class="save-button" (click)="updateTask()">Save</button>
-          <button class="cancel-button" (click)="cancelEdit()">Cancel</button>
-          
-        
+        <div class="flex space-x-2">
+          <button (click)="toggleCompletion(task)"
+            [ngClass]="task.completed ? 'bg-green-500 hover:bg-green-600 focus:ring-green-300 dark:bg-green-700 dark:hover:bg-green-800 dark:focus:ring-green-900' : 'bg-blue-500 hover:bg-blue-600 focus:ring-blue-300 dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-900'"
+            class="focus:outline-none text-white font-medium rounded-lg text-sm px-5 py-2.5 mb-2">
+            {{ task.completed ? 'Complete' : 'Incomplete' }}
+          </button>
+
+          <button
+            class="edit-button text-sm text-white bg-yellow-700 hover:bg-yellow-800 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg px-5 py-2.5 mb-2 dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-900"
+            (click)="editTask(task)">
+            Edit
+          </button>
+
+          <button
+            class="text-sm text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 
+          font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+            (click)="task.id ? deleteTask(task.id) : null"> Delete </button>
         </div>
-      </li>
-    </ul>
-  
-    <form class="new-task-form" (ngSubmit)="addTask()">
-      <input type="text" [(ngModel)]="newTaskTitle" placeholder="New Task Title" required>
-      <textarea [(ngModel)]="newTaskDescription" placeholder="Task Description" rows="3"></textarea>
-      <button type="submit" [disabled]="!newTaskTitle.trim() || !newTaskDescription.trim()">Add Task</button>
-    </form>
-  </div>
+      </div>
+
+      <div class="task-edit-form w-full space-y-2" *ngIf="taskBeingEdited && taskBeingEdited.id === task.id">
+        <input type="text" name="editTaskTitle" [(ngModel)]="taskBeingEdited.title" placeholder="Title"
+          class="w-full p-2 bg-gray-600 text-white rounded-md" />
+        <textarea name="editTaskDescription" [(ngModel)]="taskBeingEdited.description" placeholder="Description"
+          rows="3" class="w-full p-2 bg-gray-600 text-white rounded-md"></textarea>
+        <div class="flex space-x-2">
+          <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none"
+            (click)="updateTask()">
+            Save
+          </button>
+          <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none"
+            (click)="cancelEdit()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
