@@ -1,27 +1,38 @@
 # TPTallerWeb2
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.2.
+Este proyecto es una aplicación web desarrollada con **Angular** y un servidor de **Node.js** que proporciona una API. A continuación se detallan los pasos necesarios para configurar y ejecutar el proyecto.
 
-## Development server
+### Requisitos Previos
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Tener instalado [Node.js](https://nodejs.org/) (versión 19 o superior).
+- Tener instalado [Angular CLI](https://angular.io/cli) (versión 18 o superior).
 
-## Code scaffolding
+### Instalación
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Para instalar todas las dependencias necesarias, desde la raiz del proyecto se debe ejecutar:
 
-## Build
+```bash
+npm i && cd ./api & npm i && cd ..
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Ejecutar el Proyecto:
 
-## Running unit tests
+Una vez que las dependencias estén instaladas, se puede ejecutar ambos, el servidor Node.js y la aplicación Angular, con el siguiente comando:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```bash
+npm run dev-all
+```
 
-## Running end-to-end tests
+Tambien se puede ejecutar por separado corriendo los siguientes comandos:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+- Frontend
 
-## Further help
+```bash
+npm run start
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Backend
+
+```bash
+node ./api/server.js
+```
