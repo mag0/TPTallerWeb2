@@ -12,7 +12,7 @@ Este proyecto es una aplicación web desarrollada con **Angular** y un servidor 
 Para instalar todas las dependencias necesarias, desde la raiz del proyecto se debe ejecutar:
 
 ```bash
-npm i && cd ./api & npm i && cd ..
+npm run install-all
 ```
 
 ### Ejecutar el Proyecto:

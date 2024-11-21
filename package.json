@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "install-all": "npm install && cd api && npm install && cd ..",
     "dev-all": "start node ./api/server.js & npm run start",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
