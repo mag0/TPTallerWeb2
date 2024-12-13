@@ -13,7 +13,8 @@ export interface Task {
   providedIn: 'root'
 })
 export class TaskService {
-  private apiUrl = 'http://localhost:3000/tasks';
+  // Cambia la URL local a una ruta relativa para el entorno de producción
+  private apiUrl = '/api/tasks';
 
   constructor(private http: HttpClient) {}
 
